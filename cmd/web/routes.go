@@ -17,5 +17,11 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(SessionLoad)
 	mux.Get("/", http.HandlerFunc(handlers.Repo.Home))
 	mux.Get("/about", http.HandlerFunc(handlers.Repo.About))
+	/**
+	讓 client 可以透過 http request 取得專案內的檔案，
+	例如專案內的圖檔(/static/images/house.jpg) 就可以使用這個 url 取得: http://localhost:8080/static/images/house.jpg
+	*/
+	fileServer := http.FileServer(http.Dir("./static"))
+	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 	return mux
 }

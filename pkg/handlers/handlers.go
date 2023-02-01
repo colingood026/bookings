@@ -23,20 +23,50 @@ func NewHandlers(r *Repository) {
 	Repo = r
 }
 
-func (rp *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	remoteIp := r.RemoteAddr
-	rp.App.Session.Put(r.Context(), "remote_ip", remoteIp)
-	render.RenderTemplateFromCacheV2(w, "home.page.gohtml", &models.TemplateData{})
+// Home is the handler for the home page
+func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
+	remoteIP := r.RemoteAddr
+	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+
+	render.RenderTemplateFromCacheV2(w, "home.page.tmpl", &models.TemplateData{})
 }
 
-func (rp *Repository) About(w http.ResponseWriter, r *http.Request) {
+// About is the handler for the about page
+func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
+	// perform some logic
 	stringMap := make(map[string]string)
 	stringMap["test"] = "Hello, again"
 
-	stringMap["remote_ip"] = rp.App.Session.GetString(r.Context(), "remote_ip")
-	tp := models.TemplateData{
-		StringMap: stringMap,
-	}
+	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
+	stringMap["remote_ip"] = remoteIP
 
-	render.RenderTemplateFromCacheV2(w, "about.page.gohtml", &tp)
+	// send data to the template
+	render.RenderTemplateFromCacheV2(w, "about.page.tmpl", &models.TemplateData{
+		StringMap: stringMap,
+	})
+}
+
+// Reservation renders the make a reservation page and displays form
+func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplateFromCacheV2(w, "make-reservation.page.tmpl", &models.TemplateData{})
+}
+
+// Generals renders the room page
+func (m *Repository) Generals(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplateFromCacheV2(w, "generals.page.tmpl", &models.TemplateData{})
+}
+
+// Majors renders the room page
+func (m *Repository) Majors(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplateFromCacheV2(w, "majors.page.tmpl", &models.TemplateData{})
+}
+
+// Availability renders the search availability page
+func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplateFromCacheV2(w, "search-availability.page.tmpl", &models.TemplateData{})
+}
+
+// Contact renders the contact page
+func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplateFromCacheV2(w, "contact.page.tmpl", &models.TemplateData{})
 }

@@ -15,7 +15,7 @@ import (
 // RenderTemplate renders a template, 每次 request 過來都會從硬碟讀取一次 ，不是很有效率
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	log.Println("execute RenderTemplate", tmpl)
-	parsedTemplate, _ := template.ParseFiles("./templates/"+tmpl, "./templates/base.layout.gohtml")
+	parsedTemplate, _ := template.ParseFiles("./templates/"+tmpl, "./templates/base.layout.tmpl")
 	err := parsedTemplate.Execute(w, nil)
 	if err != nil {
 		log.Println("error parsing template", err)
@@ -54,7 +54,7 @@ func RenderTemplateFromCache(w http.ResponseWriter, t string) {
 func createTemplateCache(t string) error {
 	templates := []string{
 		fmt.Sprintf("./templates/%s", t),
-		"./templates/base.layout.gohtml",
+		"./templates/base.layout.tmpl",
 	}
 
 	parsedTemplate, err := template.ParseFiles(templates...)
@@ -89,7 +89,7 @@ func RenderTemplateFromCacheV2(w http.ResponseWriter, tmpl string, td *models.Te
 	// get requested template from cache
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal("template not exist", tmpl)
+		log.Fatal("template not exist ", tmpl)
 	}
 	// 不一定要做，先做檢查
 	buf := new(bytes.Buffer)
@@ -109,8 +109,8 @@ func CreateTemplateCacheV2() (map[string]*template.Template, error) {
 	//myCache := make(map[string]*template.Template)
 	myCache := map[string]*template.Template{}
 
-	// get all the files named *.page.gohtml from ./templates/
-	pages, err := filepath.Glob("./templates/*.page.gohtml")
+	// get all the files named *.page.tmpl from ./templates/
+	pages, err := filepath.Glob("./templates/*.page.tmpl")
 	if err != nil {
 		return myCache, err
 	}
@@ -120,7 +120,7 @@ func CreateTemplateCacheV2() (map[string]*template.Template, error) {
 		return myCache, err
 	}
 
-	// range through all files ending with *.page.gohtml
+	// range through all files ending with *.page.tmpl
 	for _, page := range pages {
 		name := filepath.Base(page)
 		tmpl, err := template.New(name).ParseFiles(page)
@@ -129,7 +129,7 @@ func CreateTemplateCacheV2() (map[string]*template.Template, error) {
 		}
 
 		if hasLayout {
-			tmpl, err = tmpl.ParseGlob("./templates/*.layout.gohtml")
+			tmpl, err = tmpl.ParseGlob("./templates/*.layout.tmpl")
 			if err != nil {
 				return myCache, err
 			}
@@ -141,7 +141,7 @@ func CreateTemplateCacheV2() (map[string]*template.Template, error) {
 }
 
 func isLayoutExists() (bool, error) {
-	matches, err := filepath.Glob("./templates/*.layout.gohtml")
+	matches, err := filepath.Glob("./templates/*.layout.tmpl")
 	if err != nil {
 		return false, err
 	}

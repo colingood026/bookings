@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/colingood026/bookings/pkg/config"
-	"github.com/colingood026/bookings/pkg/handlers"
+	"github.com/colingood026/bookings/internal/config"
+	"github.com/colingood026/bookings/internal/handlers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"

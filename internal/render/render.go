@@ -2,8 +2,8 @@ package render
 
 import (
 	"bytes"
-	"github.com/colingood026/bookings/pkg/config"
-	"github.com/colingood026/bookings/pkg/models"
+	"github.com/colingood026/bookings/internal/config"
+	"github.com/colingood026/bookings/internal/models"
 	"github.com/justinas/nosurf"
 	"html/template"
 	"log"
